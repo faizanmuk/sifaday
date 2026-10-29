@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7d9de">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="A parcel for Sifa, from Faizan. Handle with care.">
+  <title>For Sifa · The Birthday Issue</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/data.js" defer></script>
+  <script src="js/animations.js" defer></script>
+  <script src="js/interactions.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body data-view="parcel" class="is-loading">
+
+  <!-- ============ LOADER ============ -->
+  <div class="loader" id="loader" role="status" aria-live="polite">
+    <span class="loader-tape" aria-hidden="true"></span>
+    <p class="loader-text" id="loader-text">Hold on sayang, wrapping your present…</p>
+  </div>
+
+  <!-- Paper grain over everything (purely decorative) -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Page-turn wipe used between chapters -->
+  <div class="wipe" id="wipe" aria-hidden="true"><span class="wipe-label" id="wipe-label"></span></div>
+
+  <!-- ============ HUD ============ -->
+  <header class="hud">
+    <button class="hud-contents" id="hud-contents" type="button" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h9"/></svg>
+      <span>Contents</span>
+    </button>
+
+    <div class="music" id="music" data-state="checking">
+      <button class="music-btn" id="music-btn" type="button" aria-pressed="false" aria-describedby="music-state">
+        <span class="music-icon" aria-hidden="true">
+          <svg class="i-note" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>
+          <span class="eq"><i></i><i></i><i></i><i></i></span>
+        </span>
+        <span class="music-text">
+          <span class="music-title" id="music-title">HER</span>
+          <span class="music-state" id="music-state">Checking…</span>
+        </span>
+      </button>
+      <button class="sfx-btn" id="sfx-btn" type="button" aria-pressed="true" aria-label="Sound effects: on" data-state="on">
+        <svg class="i-sound" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg class="i-muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9.5l5 5M22 9.5l-5 5"/></svg>
+        <span class="sfx-label">FX</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="read-progress" id="read-progress" aria-hidden="true"><i></i></div>
+  <div class="now-playing" id="now-playing" aria-live="polite"><span class="np-disc" aria-hidden="true"></span><span class="np-label">now playing</span><b class="np-title"></b></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <button class="nudge" id="nudge" type="button" hidden></button>
+
+  <main id="main">
+
+    <!-- ===================================================== -->
+    <!-- THE PARCEL · curiosity                                  -->
+    <!-- ===================================================== -->
+    <section class="view v-parcel" id="parcel" data-tone="#f4c9d3" aria-labelledby="parcel-title">
+      <p class="parcel-kicker"><span>Special delivery</span><span>1 of 1</span></p>
+
+      <div class="parcel-stage">
+        <button class="parcel" id="parcel-box" type="button" aria-label="The parcel">
+          <span class="parcel-zine" aria-hidden="true"><b>SIFAA</b><i>the birthday issue</i></span>
+          <span class="box-lid" aria-hidden="true"></span>
+          <span class="box-body" aria-hidden="true"></span>
+          <span class="ribbon ribbon-v" aria-hidden="true"></span>
+          <span class="ribbon ribbon-h" aria-hidden="true"></span>
+          <span class="bow" aria-hidden="true"><i></i><i></i></span>
+          <span class="label" aria-hidden="true">
+            <span class="label-row"><b>To</b><span id="label-to">Assifa Niswa (Sifaa)</span></span>
+            <span class="label-row"><b>From</b><span id="label-from">Faizan</span></span>
+            <span class="label-row"><b>Contents</b><span id="label-contents"></span></span>
+            <span class="label-row"><b>Handle</b><span id="label-handling"></span></span>
+            <span class="label-barcode"></span>
+          </span>
+          <span class="stamp stamp-fragile" aria-hidden="true">Fragile</span>
+          <span class="stamp stamp-today" aria-hidden="true">Open today</span>
+        </button>
+        <p class="annot annot-parcel" id="parcel-annot" aria-hidden="true"></p>
+      </div>
+
+      <div class="parcel-steps" id="parcel-steps">
+        <div class="pstep is-active" id="pstep-check">
+          <p class="eyebrow">Recipient check</p>
+          <h1 class="parcel-q" id="parcel-title" tabindex="-1">Is this <em>Sifa</em>?</h1>
+          <p class="parcel-reply" id="parcel-reply" aria-live="polite"></p>
+          <div class="btn-row">
+            <button class="btn btn-cherry" id="yes-btn" type="button">Yes, it's me</button>
+            <button class="btn btn-paper" id="no-btn" type="button">No, I'm someone else</button>
+          </div>
+        </div>
+        <div class="pstep" id="pstep-open">
+          <p class="eyebrow">Confirmed</p>
+          <h2 class="parcel-q" tabindex="-1">Then this is yours, <em>birthday girl.</em></h2>
+          <label class="check" id="music-choice" hidden>
+            <input type="checkbox" id="with-music" checked>
+            <span class="check-box" aria-hidden="true"></span>
+            <span>Play our song while you read</span>
+          </label>
+          <div class="btn-row">
+            <button class="btn btn-cherry btn-big" id="open-btn" type="button">Pull the ribbon</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- COVER + CONTENTS · the hub                              -->
+    <!-- ===================================================== -->
+    <section class="view v-cover" id="cover" data-tone="#fbf1e4" aria-labelledby="cover-title">
+      <div class="cover-page">
+        <p class="mast-top"><span id="mast-left">30 · 10</span><span id="cover-issue">The Birthday Issue</span><span>One copy printed</span></p>
+        <h1 class="mast" id="cover-title" tabindex="-1"><span class="mast-word" id="mast-word">SIFAA</span><span class="mast-sub">the birthday issue</span></h1>
+        <p class="edition-stamp" id="edition-stamp" hidden></p>
+        <div class="cover-art">
+          <div class="cover-photo" id="cover-photo"></div>
+          <span class="burst" aria-hidden="true"><span id="burst-text">Happy<br>birthday!</span></span>
+          <ul class="cover-lines" id="cover-lines"></ul>
+        </div>
+      </div>
+
+      <nav class="contents" aria-labelledby="contents-title">
+        <h2 class="contents-title" id="contents-title">Inside this issue</h2>
+        <ol class="contents-list" id="contents-list"><!-- built from data --></ol>
+        <p class="annot annot-contents" id="contents-note"></p>
+        <button class="btn btn-cherry" id="start-btn" type="button">Start reading</button>
+
+        <div class="week" id="week">
+          <h3 class="week-title" id="week-title">Birthday week</h3>
+          <p class="week-hint" id="week-hint"></p>
+          <ol class="week-days" id="week-days"><!-- seven daily notes from data --></ol>
+        </div>
+
+        <div class="secrets" id="secrets">
+          <p class="secrets-count" id="secrets-count"></p>
+          <p class="annot secrets-hint" id="secrets-hint"></p>
+        </div>
+      </nav>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 01 · THE WARM-UP ROUND · amusement                      -->
+    <!-- ===================================================== -->
+    <section class="view v-play chapter" id="play" data-tone="#ffe7a3" aria-labelledby="play-title">
+      <header class="ch-head">
+        <p class="ch-num" aria-hidden="true">01</p>
+        <p class="eyebrow">The warm-up round</p>
+        <h2 class="ch-title" id="play-title" tabindex="-1">Before anything <em>soft</em>, a test.</h2>
+        <p class="ch-deck">Six questions. Open book. The examiner is extremely biased, because it's your birthday and he'd like to survive it.</p>
+      </header>
+
+      <div class="exam" data-reveal>
+        <div class="exam-head">
+          <p class="exam-title">The Official Sifa Exam</p>
+          <p class="exam-name">Name: <span class="hand">Sifa</span> <span class="hand red">✓ good start</span></p>
+        </div>
+        <div class="quiz" id="quiz"><!-- built from data --></div>
+      </div>
+
+      <div class="scratch-wrap" data-reveal>
+        <p class="eyebrow center">Bonus round</p>
+        <h3 class="sec-title">Everybody wins. Mostly you.</h3>
+        <div class="ticket" id="ticket">
+          <div class="ticket-side" aria-hidden="true"><span>Admit one</span><span>Birthday girl</span></div>
+          <div class="ticket-main">
+            <p class="ticket-title" id="ticket-title">Birthday scratch card</p>
+            <div class="scratch" id="scratch">
+              <div class="scratch-prize" id="scratch-prize">
+                <p class="prize-kicker">You won</p>
+                <p class="prize-big" id="prize-big"></p>
+                <p class="prize-detail" id="prize-detail"></p>
+              </div>
+              <canvas class="scratch-foil" id="scratch-foil" aria-hidden="true"></canvas>
+            </div>
+            <p class="prize-fine" id="prize-fine"></p>
+          </div>
+        </div>
+        <button class="link-btn" id="scratch-reveal" type="button">Can't scratch? Just reveal it</button>
+      </div>
+
+      <nav class="ch-end" data-end="play" aria-label="Continue reading"></nav>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 02 · A FIELD GUIDE TO SIFAA · her                       -->
+    <!-- ===================================================== -->
+    <section class="view v-her chapter" id="her" data-tone="#f9cfd8" aria-labelledby="her-title">
+      <header class="ch-head">
+        <p class="ch-num" aria-hidden="true">02</p>
+        <p class="eyebrow">A field guide to</p>
+        <h2 class="ch-title ch-title-huge" id="her-title" tabindex="-1">Sifa</h2>
+        <p class="ch-deck">Observed closely, every day, from a few thousand kilometres away.</p>
+      </header>
+
+      <div class="specimen" data-reveal>
+        <div class="spec-photo" id="spec-photo"></div>
+        <dl class="facts" id="facts"><!-- built from data --></dl>
+        <span class="stamp stamp-status" aria-hidden="true">Status: very loved</span>
+      </div>
+
+      <div class="mood" id="mood" data-reveal>
+        <p class="eyebrow center" id="mood-title">Today's birthday mood</p>
+        <p class="annot center mood-hint" id="mood-hint"></p>
+        <div class="mood-opts" id="mood-opts" role="group" aria-labelledby="mood-title"></div>
+        <p class="mood-react" id="mood-react" aria-live="polite"></p>
+      </div>
+
+      <div class="notes-block">
+        <p class="eyebrow center" data-reveal>The little things</p>
+        <h3 class="sec-title" data-reveal>Things I notice about you. Tap one.</h3>
+        <ul class="notes" id="little-things"><!-- built from data --></ul>
+      </div>
+
+      <div class="wall-block" id="wall-block">
+        <p class="eyebrow center" data-reveal>Exhibit A–F</p>
+        <h3 class="sec-title" data-reveal>Evidence that you're cute. Case closed.</h3>
+        <ul class="wall" id="gallery"><!-- built from data --></ul>
+      </div>
+
+      <nav class="ch-end" data-end="her" aria-label="Continue reading"></nav>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 03 · HOW IT STARTED · affection                          -->
+    <!-- ===================================================== -->
+    <section class="view v-us chapter" id="us" data-tone="#fdf6ec" aria-labelledby="us-title">
+      <header class="ch-head">
+        <p class="ch-num" aria-hidden="true">03</p>
+        <p class="eyebrow">How it started</p>
+        <h2 class="ch-title" id="us-title" tabindex="-1">Two people.<br>Two countries.</h2>
+        <p class="ch-deck">Somewhere between here and there, a few conversations turned into something much bigger.</p>
+      </header>
+
+      <ol class="timeline" id="timeline"><!-- built from data --></ol>
+
+      <p class="equation" data-reveal aria-label="Sifaa plus Faiz equals SIFAAIZ">
+        <span aria-hidden="true">Sifaa</span><span class="op" aria-hidden="true">+</span><span aria-hidden="true">Faiz</span><span class="op" aria-hidden="true">=</span><strong aria-hidden="true">SIFAAIZ</strong>
+      </p>
+
+      <blockquote class="pull" data-reveal>
+        <p>I don't remember the exact moment we became us. Maybe that's the best part.</p>
+        <p>It just happened, slowly, in all the little moments. And then one day you were my person.</p>
+      </blockquote>
+
+      <div class="jar-block">
+        <p class="eyebrow center" data-reveal>Why you?</p>
+        <h3 class="sec-title" data-reveal>I kept a jar. Take one.</h3>
+        <div class="jar-area" id="reasons" data-reveal><!-- built from data --></div>
+        <div class="reasons-end" id="reasons-end"><!-- built from data --></div>
+      </div>
+
+      <nav class="ch-end" data-end="us" aria-label="Continue reading"></nav>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 04 · THE DISTANCE · tenderness, hope                    -->
+    <!-- ===================================================== -->
+    <section class="view v-apart chapter" id="apart" data-tone="#3a2d5c" aria-labelledby="apart-title">
+      <header class="ch-head">
+        <p class="ch-num" aria-hidden="true">04</p>
+        <p class="eyebrow">The distance</p>
+        <h2 class="ch-title" id="apart-title" tabindex="-1">The quiet part.</h2>
+        <p class="ch-deck">No jokes on this page. Well. Maybe one.</p>
+      </header>
+
+      <div class="route" id="route" data-reveal>
+        <div class="postmark pm-a"><span class="pm-ring"><span id="place-a">Pakistan</span></span></div>
+        <svg class="route-line" id="route-line" viewBox="0 0 320 140" aria-hidden="true">
+          <path class="rl-path" id="rl-path" d="M40 100 C 110 10, 210 10, 280 100"/>
+          <path class="rl-done" id="rl-done" pathLength="1" d="M40 100 C 110 10, 210 10, 280 100"/>
+          <g class="rl-plane" id="rl-plane" transform="translate(40 100)">
+            <g class="rl-bob"><path d="M-7 -4 L8 0 L-7 4 L-4 0 Z"/></g>
+          </g>
+        </svg>
+        <div class="postmark pm-b"><span class="pm-ring"><span id="place-b">Indonesia</span></span></div>
+      </div>
+      <p class="route-note annot" id="route-note" aria-live="polite"></p>
+      <div class="clocks" id="clocks" data-reveal aria-live="off">
+        <div class="clock"><p class="clock-label" id="clock-b-label">Right now with you</p><p class="clock-time" id="clock-b">--:--</p></div>
+        <div class="clock"><p class="clock-label" id="clock-a-label">Right now with me</p><p class="clock-time" id="clock-a">--:--</p></div>
+        <p class="clock-note annot" id="clock-note"></p>
+      </div>
+      <p class="apart-text" id="apart-text" data-reveal></p>
+      <p class="apart-coda" data-reveal>Distance is part of our story.<br><em>It's not the ending.</em></p>
+
+      <div class="voice-block">
+        <p class="eyebrow center" data-reveal>A voice note</p>
+        <h3 class="sec-title" data-reveal>Some things sound better than they type.</h3>
+        <ul class="voice-list" id="voice-notes"><!-- one player per voice note --></ul>
+      </div>
+
+      <div class="letters-block">
+        <p class="eyebrow center" data-reveal>By airmail</p>
+        <h3 class="sec-title" data-reveal>Open these when you need me.</h3>
+        <ul class="envelopes" id="envelopes"><!-- built from data --></ul>
+      </div>
+
+      <div class="future-block" id="future">
+        <p class="eyebrow center" data-reveal>A notebook</p>
+        <h3 class="sec-title" data-reveal>Pages we haven't written yet.</h3>
+        <div class="book-wrap" data-reveal>
+          <div class="book" id="book"><!-- built from data --></div>
+        </div>
+        <p class="book-ending" id="book-ending"></p>
+      </div>
+
+      <div class="letter-final" id="final-message" data-reveal><!-- the written letter --></div>
+
+      <nav class="ch-end" data-end="apart" aria-label="Continue reading"></nav>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 05 · YOUR BIRTHDAY · joy                                -->
+    <!-- ===================================================== -->
+    <section class="view v-party chapter" id="party" data-tone="#c9204a" aria-labelledby="party-title">
+      <div class="balloons" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <header class="ch-head party-head">
+        <p class="ch-num" aria-hidden="true">05</p>
+        <p class="eyebrow">Okay. Enough feelings. It's your</p>
+        <h2 class="party-title" id="party-title" tabindex="-1" aria-label="Birthday!">
+          <span aria-hidden="true">B</span><span aria-hidden="true">i</span><span aria-hidden="true">r</span><span aria-hidden="true">t</span><span aria-hidden="true">h</span><span aria-hidden="true">d</span><span aria-hidden="true">a</span><span aria-hidden="true">y</span><span aria-hidden="true">!</span>
+        </h2>
+        <p class="ch-deck">30 October. Your day, your rules. Everyone else is just a guest. Including me.</p>
+      </header>
+
+      <section class="odometer" id="odometer" aria-labelledby="odo-title">
+        <p class="eyebrow center odo-title" id="odo-title">The Sifa odometer</p>
+        <div class="odo-age"><span class="odo-big" aria-live="off">19</span><span class="odo-unit">years of Sifa</span></div>
+        <ul class="odo-stats"><!-- built from data --></ul>
+        <p class="odo-live"></p>
+        <p class="annot center odo-note"></p>
+      </section>
+
+      <ul class="booth" id="birthday-photos"><!-- built from data --></ul>
+
+      <div class="cake-block" id="cake-block">
+        <ol class="steps" id="cake-steps" aria-label="Progress">
+          <li class="is-now">Make a wish</li>
+          <li>Blow the candles</li>
+          <li>Celebrate</li>
+        </ol>
+        <h3 class="sec-title" id="cake-title"></h3>
+        <p class="annot annot-cake" id="cake-annot"></p>
+        <div class="cake" id="cake">
+          <div class="candles" id="candles"><!-- candle buttons from data --></div>
+          <span class="tier tier-top" aria-hidden="true"><span class="piping" id="cake-name">Sifaa</span></span>
+          <span class="tier tier-bottom" aria-hidden="true"></span>
+          <span class="plate" aria-hidden="true"></span>
+        </div>
+        <div class="btn-row center">
+          <button class="btn btn-cherry" id="wish-btn" type="button">I've made my wish</button>
+          <button class="btn btn-paper" id="blow-all" type="button" hidden>One big breath</button>
+        </div>
+        <div class="cake-after" id="cake-after" aria-live="polite">
+          <p class="cake-after-big" id="cake-after-big"></p>
+          <p class="cake-after-reply" id="cake-after-reply"></p>
+        </div>
+      </div>
+
+      <div class="present-block" id="present-block">
+        <p class="eyebrow center">There's also this</p>
+        <h3 class="sec-title">A present. Slightly suspicious.</h3>
+        <button class="gift" id="gift" type="button" aria-label="Open the present">
+          <span class="gift-lid" aria-hidden="true"></span>
+          <span class="gift-box" aria-hidden="true"></span>
+          <span class="gift-ribbon" aria-hidden="true"></span>
+          <span class="gift-tag" id="gift-tag" aria-hidden="true"></span>
+        </button>
+        <p class="annot center" id="gift-hint"></p>
+
+        <div class="present-inside" id="present-inside" aria-live="polite">
+          <p class="present-lead" id="present-lead"></p>
+          <ol class="wishes" id="wishes"><!-- wishes from data, revealed one by one --></ol>
+          <div class="btn-row center">
+            <button class="btn btn-paper" id="wish-next" type="button">Pull out the next one</button>
+          </div>
+          <div class="compliment" id="compliment" hidden>
+            <p class="compliment-text" id="compliment-text"></p>
+            <button class="btn btn-paper" id="compliment-btn" type="button">One more, please</button>
+          </div>
+        </div>
+      </div>
+
+      <nav class="ch-end" data-end="party" aria-label="Continue reading"></nav>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 06 · THE LAST PAGE · Faizan's birthday video            -->
+    <!-- Video + poster paths live in js/data.js → video         -->
+    <!--   assets/media/assifa-birthday-video.mp4                -->
+    <!--   assets/photos/assifa-birthday-video-poster.jpg        -->
+    <!-- ===================================================== -->
+    <section class="view v-finale" id="finale" data-tone="#2a1622" aria-labelledby="finale-title">
+      <div class="fin-intro" id="fin-intro">
+        <p class="eyebrow">06 · The last page</p>
+        <h2 class="fin-title" id="finale-title" tabindex="-1">One more thing.</h2>
+        <div class="fin-lines" id="fin-lines"><!-- intro lines from data --></div>
+        <p class="annot fin-ready-note" id="fin-ready-note"></p>
+        <button class="btn btn-cherry btn-big" id="fin-ready" type="button">Okay, I'm ready</button>
+      </div>
+
+      <div class="fin-stage-wrap" id="fin-stage-wrap" hidden>
+        <div class="vf-stage" id="vf-stage">
+          <button class="vf-cover" id="vf-play" type="button">
+            <span class="vf-poster" id="vf-poster" aria-hidden="true"></span>
+            <span class="vf-shade" aria-hidden="true"></span>
+            <span class="vf-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span class="vf-label" id="vf-label">Play your birthday message</span>
+          </button>
+          <div class="vf-frame" id="vf-frame" hidden><!-- <video> is created only when needed --></div>
+          <div class="vf-missing" id="vf-missing" hidden>
+            <p class="vf-missing-title" id="vf-missing-title"></p>
+            <p class="vf-missing-text" id="vf-missing-text"></p>
+            <p class="vf-missing-help dev-only">Setup (only shown while testing locally): save the video as <code>assets/media/assifa-birthday-video.mp4</code> (and an optional poster as <code>assets/photos/assifa-birthday-video-poster.jpg</code>), then refresh.</p>
+          </div>
+        </div>
+        <button class="link-btn vf-continue" id="vf-continue" type="button" hidden></button>
+      </div>
+
+      <div class="vf-after" id="vf-after">
+        <div class="vf-after-body" id="vf-after-body"></div>
+        <p class="vf-closing" id="vf-closing"></p>
+        <p class="vf-sign" id="vf-sign"></p>
+        <h3 class="merge" id="merge" aria-label="Sifaa and Faiz become SIFAAIZ"></h3>
+        <p class="back-cover"><span id="back-cover"></span> <span class="next-issue" id="next-issue"></span></p>
+        <div class="wa-box" id="wa-box">
+          <a class="btn btn-cherry wa-btn" id="wa-btn" href="#" target="_blank" rel="noopener noreferrer"></a>
+          <p class="annot wa-note" id="wa-note"></p>
+        </div>
+        <div class="btn-row center">
+          <button class="btn btn-paper" id="replay-video" type="button"></button>
+          <button class="btn btn-paper" id="to-contents" type="button"></button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ LIGHTBOX ============ -->
+  <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
+    <figure class="lb-figure">
+      <img class="lb-img" id="lb-img" alt="">
+      <figcaption class="lb-caption" id="lb-caption"></figcaption>
+    </figure>
+    <button class="icon-btn lb-close" type="button" data-close aria-label="Close photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <button class="icon-btn lb-prev" type="button" id="lb-prev" aria-label="Previous photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button class="icon-btn lb-next" type="button" id="lb-next" aria-label="Next photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </dialog>
+
+  <!-- ============ LETTER (Open When) ============ -->
+  <dialog class="letter-dialog" id="letter" aria-labelledby="letter-title">
+    <div class="letter-stage" id="letter-stage">
+      <article class="letter-paper">
+        <p class="letter-kicker" id="letter-kicker">Open when</p>
+        <h3 class="letter-title" id="letter-title"></h3>
+        <div class="letter-body" id="letter-body"></div>
+        <p class="letter-sign">— Faizan</p>
+      </article>
+    </div>
+    <button class="icon-btn letter-close" type="button" data-close aria-label="Close letter">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </dialog>
+
+  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+
+  <noscript>
+    <div class="noscript">This present needs JavaScript to open.</div>
+  </noscript>
+</body>
+</html>

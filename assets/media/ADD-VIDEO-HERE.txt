@@ -1,0 +1,12 @@
+Put your personal birthday video in this folder as:
+
+    assifa-birthday-video.mp4
+
+and the poster image (the still shown before she presses play) in assets/photos/ as:
+
+    assifa-birthday-video-poster.jpg
+
+Paths can be changed in js/data.js -> video.
+Tips: export as MP4 (H.264 + AAC), 1080p or 720p, ideally under ~60 MB.
+A vertical phone video works too: set video.aspect to "9 / 16" (it also auto-detects).
+Until the file exists, the site shows a placeholder instead.

@@ -1,0 +1,15 @@
+Photos are optional - the site is complete without them.
+To add some, use these names (or change the paths in js/data.js):
+
+    IMPORTANT: iPhone photos (.HEIC) don't show in Chrome/Android. Convert them to
+    JPG first. Renaming .HEIC to .jpg does NOT convert it.
+
+    cover.jpg                          magazine cover (.jpeg / .png / .webp also work)
+    field-guide.jpg                    polaroid next to her facts (.jpeg / .png / .webp also work)
+    gallery-1.jpg ... gallery-6.jpg    photo wall
+    story-1.jpg ... story-3.jpg        "How it started"
+    birthday-1.jpg ... birthday-3.jpg  birthday photo booth
+    assifa-birthday-video-poster.jpg   optional still image shown before the video plays
+
+About 1600px on the long edge, JPEG quality ~75-80.
+Missing photos are simply not shown (the cover and field guide show a handwritten note instead).

@@ -1,0 +1,15 @@
+Already here (downloaded from Pixabay, Pixabay Content License):
+
+    background-music.mp3       main song (most of the site)
+    emotional-piano.mp3        soft piano (the distance chapter + heartfelt wishes)
+    birthday-celebration.mp3   short clip after the cake and after the video
+    pop-click.mp3              small taps and reveals
+    funny-boing.mp3            funny quiz answers and jokes
+    magic-reveal.mp3           parcel opening, the present, the final reveal
+    birthday-cheer.mp3         once, when the last candle goes out
+
+Still to add (your recordings, scripts in README.md):
+
+    voice-message.mp3          the voice note - "Happy birthday, sayang"
+
+To replace any track, save a new MP3 with the same name (or change the path in js/data.js).
